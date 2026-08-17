@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.boot.post.PostMapper">
+
+	<select id="selectPostList" resultType="com.test.boot.post.PostVO">
+		SELECT
+			article_id, group_cd, detail_cd, title, content, status_cd,
+			view_cnt, like_cnt, upload_file_id, del_yn,
+			reg_dt, reg_id, reg_ip, mod_dt, mod_id, mod_ip
+		FROM post
+		WHERE del_yn = 'N'
+		ORDER BY article_id DESC
+	</select>
+
+	<select id="selectPost" parameterType="long" resultType="com.test.boot.post.PostVO">
+		SELECT
+			article_id, group_cd, detail_cd, title, content, status_cd,
+			view_cnt, like_cnt, upload_file_id, del_yn,
+			reg_dt, reg_id, reg_ip, mod_dt, mod_id, mod_ip
+		FROM post
+		WHERE article_id = #{articleId}
+	</select>
+
+</mapper>

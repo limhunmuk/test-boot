@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<Configuration>
+    <Properties>
+        <Property name="LOG_PATTERN">%d %5p [%c] %enc{%m}{CRLF}%n</Property>
+        <Property name="LOG_PATH">/home/test-boot/log</Property>
+    </Properties>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}" />
+        </Console>
+        <RollingFile name="fileAppender"
+                     filePattern="${LOG_PATH}/test-boot-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="${LOG_PATTERN}" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <DirectWriteRolloverStrategy maxFiles="30" />
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="java.sql" level="INFO" additivity="false">
+            <AppenderRef ref="console" />
+            <SpringProfile name="prod">
+                <AppenderRef ref="fileAppender" />
+            </SpringProfile>
+        </Logger>
+        <Logger name="com.test.boot" level="INFO" additivity="false">
+            <AppenderRef ref="console" />
+            <SpringProfile name="prod">
+                <AppenderRef ref="fileAppender" />
+            </SpringProfile>
+        </Logger>
+        <Logger name="org.egovframe" level="INFO" additivity="false">
+            <AppenderRef ref="console" />
+            <SpringProfile name="prod">
+                <AppenderRef ref="fileAppender" />
+            </SpringProfile>
+        </Logger>
+        <!-- log SQL with timing information, post execution -->
+        <Logger name="jdbc.sqltiming" level="INFO" additivity="false">
+            <AppenderRef ref="console" />
+            <SpringProfile name="prod">
+                <AppenderRef ref="fileAppender" />
+            </SpringProfile>
+        </Logger>
+        <Logger name="org.springframework" level="INFO" additivity="false">
+            <AppenderRef ref="console" />
+            <SpringProfile name="prod">
+                <AppenderRef ref="fileAppender" />
+            </SpringProfile>
+        </Logger>
+        <Root level="INFO">
+            <AppenderRef ref="console" />
+            <SpringProfile name="prod">
+                <AppenderRef ref="fileAppender" />
+            </SpringProfile>
+        </Root>
+    </Loggers>
+</Configuration>

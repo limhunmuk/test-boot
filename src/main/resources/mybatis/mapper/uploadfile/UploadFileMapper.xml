@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.boot.uploadfile.UploadFileMapper">
+
+	<select id="selectUploadFileList" resultType="com.test.boot.uploadfile.UploadFileVO">
+		SELECT
+			upload_file_id, category, save_file_nm, real_file_nm, extension, size, del_yn,
+			reg_dt, reg_id, reg_ip
+		FROM upload_file
+		ORDER BY upload_file_id DESC
+	</select>
+
+</mapper>
