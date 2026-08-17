@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>준비 중</title>
+	<link rel="stylesheet" th:href="@{/css/nav.css}">
+	<style>
+		body {
+			font-family: -apple-system, "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+			margin: 0;
+			background: #fafafa;
+			color: #222;
+		}
+		.wrap { max-width: 640px; margin: 0 auto; padding: 100px 24px; text-align: center; }
+		.wrap p { color: #888; margin-bottom: 24px; }
+		.wrap a { color: #2b6cb0; text-decoration: none; font-size: 14px; }
+	</style>
+</head>
+<body>
+	<div th:replace="~{fragments/nav :: nav('')}"></div>
+
+	<div class="wrap">
+		<p th:text="${message}"></p>
+		<a th:href="@{/}">← 홈으로</a>
+	</div>
+</body>
+</html>

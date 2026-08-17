@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>공지사항 목록</title>
+	<link rel="stylesheet" th:href="@{/css/nav.css}">
+	<style>
+		:root {
+			--border: #e2e2e2;
+			--muted: #888;
+			--accent: #2b6cb0;
+		}
+		body {
+			font-family: -apple-system, "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+			margin: 0;
+			background: #fafafa;
+			color: #222;
+		}
+		.wrap { max-width: 860px; margin: 0 auto; padding: 40px 24px; }
+		h1 { font-size: 22px; margin: 0 0 4px; }
+		.sub { color: var(--muted); font-size: 13px; margin: 0 0 20px; }
+		table {
+			border-collapse: collapse;
+			width: 100%;
+			background: #fff;
+			box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+		}
+		th, td { border-bottom: 1px solid var(--border); padding: 10px 14px; text-align: left; font-size: 14px; }
+		th { background: #f5f6f8; color: #555; font-weight: 600; }
+		td.num, th.num { width: 60px; color: var(--muted); }
+		td.view, th.view { width: 90px; color: var(--muted); }
+		td.date, th.date { width: 140px; color: var(--muted); }
+		tr:hover td { background: #fbfcff; }
+		a.title-link { color: #222; text-decoration: none; }
+		a.title-link:hover { color: var(--accent); text-decoration: underline; }
+		.badge-important {
+			display: inline-block;
+			background: #fdecea;
+			color: #c0392b;
+			font-size: 11px;
+			padding: 2px 6px;
+			border-radius: 3px;
+			margin-right: 6px;
+		}
+		.empty { color: var(--muted); padding: 24px; text-align: center; background: #fff; }
+		.pagination { margin-top: 20px; display: flex; gap: 4px; align-items: center; justify-content: center; }
+		.pagination a {
+			display: inline-block;
+			min-width: 28px;
+			padding: 5px 8px;
+			text-align: center;
+			text-decoration: none;
+			color: #444;
+			border-radius: 4px;
+			font-size: 13px;
+		}
+		.pagination a:hover { background: #eef2f8; }
+		.pagination a.active { background: var(--accent); color: #fff; font-weight: 600; }
+		.pagination a.disabled { color: #ccc; pointer-events: none; }
+		.header-row { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 4px; }
+		.write-btn {
+			display: inline-block;
+			padding: 8px 16px;
+			background: var(--accent);
+			color: #fff;
+			border-radius: 4px;
+			text-decoration: none;
+			font-size: 13px;
+		}
+		.write-btn:hover { background: #235a92; }
+	</style>
+</head>
+<body>
+	<div th:replace="~{fragments/nav :: nav('notice')}"></div>
+	<div class="wrap">
+		<div class="header-row">
+			<h1>공지사항</h1>
+			<a class="write-btn" th:href="@{/notices/new}">글쓰기</a>
+		</div>
+		<p class="sub" th:text="|전체 ${noticePage.totalCount}건 · ${noticePage.currentPage} / ${noticePage.totalPages} 페이지|"></p>
+
+		<table th:if="${!#lists.isEmpty(noticePage.notices)}">
+			<thead>
+				<tr>
+					<th class="num">번호</th>
+					<th>제목</th>
+					<th class="view">조회수</th>
+					<th class="date">등록일</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="notice : ${noticePage.notices}">
+					<td class="num" th:text="${notice.noticeId}"></td>
+					<td>
+						<span class="badge-important" th:if="${notice.importantYn == 'Y'}">중요</span>
+						<a class="title-link" th:href="@{/notices/{id}(id=${notice.noticeId})}" th:text="${notice.title}"></a>
+					</td>
+					<td class="view" th:text="${notice.viewCnt}"></td>
+					<td class="date" th:text="${#temporals.format(notice.regDt, 'yyyy-MM-dd HH:mm')}"></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<p class="empty" th:if="${#lists.isEmpty(noticePage.notices)}">등록된 공지사항이 없습니다.</p>
+
+		<div class="pagination" th:if="${noticePage.totalPages > 1}">
+			<a th:href="@{/notices(page=1)}"
+			   th:classappend="${noticePage.currentPage <= 1} ? 'disabled'">«</a>
+			<a th:href="@{/notices(page=${noticePage.currentPage - 1})}"
+			   th:classappend="${noticePage.currentPage <= 1} ? 'disabled'">‹</a>
+			<span th:each="p : ${#numbers.sequence(1, noticePage.totalPages)}">
+				<a th:href="@{/notices(page=${p})}"
+				   th:text="${p}"
+				   th:classappend="${p == noticePage.currentPage} ? 'active'"></a>
+			</span>
+			<a th:href="@{/notices(page=${noticePage.currentPage + 1})}"
+			   th:classappend="${noticePage.currentPage >= noticePage.totalPages} ? 'disabled'">›</a>
+			<a th:href="@{/notices(page=${noticePage.totalPages})}"
+			   th:classappend="${noticePage.currentPage >= noticePage.totalPages} ? 'disabled'">»</a>
+		</div>
+	</div>
+</body>
+</html>

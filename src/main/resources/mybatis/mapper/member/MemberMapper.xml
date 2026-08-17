@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.test.boot.member.MemberMapper">
+<mapper namespace="com.test.boot.domain.member.mapper.MemberMapper">
 
-	<select id="selectMemberList" resultType="com.test.boot.member.MemberVO">
+	<select id="selectMemberList" resultType="com.test.boot.domain.member.vo.MemberVO">
 		SELECT
 			member_id, login_id, password, mem_nm, nick_nm, mem_type, join_dt,
 			phone_no, addr, addr_detail, del_yn,

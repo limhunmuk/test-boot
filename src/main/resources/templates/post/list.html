@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>게시글 목록</title>
+	<style>
+		:root {
+			--border: #e2e2e2;
+			--muted: #888;
+			--accent: #2b6cb0;
+		}
+		body {
+			font-family: -apple-system, "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+			margin: 0;
+			background: #fafafa;
+			color: #222;
+		}
+		.wrap { max-width: 860px; margin: 0 auto; padding: 40px 24px; }
+		h1 { font-size: 22px; margin: 0 0 4px; }
+		.sub { color: var(--muted); font-size: 13px; margin: 0 0 20px; }
+		table {
+			border-collapse: collapse;
+			width: 100%;
+			background: #fff;
+			box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+		}
+		th, td { border-bottom: 1px solid var(--border); padding: 10px 14px; text-align: left; font-size: 14px; }
+		th { background: #f5f6f8; color: #555; font-weight: 600; }
+		td.num, th.num { width: 60px; color: var(--muted); }
+		td.view, th.view { width: 90px; color: var(--muted); }
+		td.date, th.date { width: 140px; color: var(--muted); }
+		tr:hover td { background: #fbfcff; }
+		a.title-link { color: #222; text-decoration: none; }
+		a.title-link:hover { color: var(--accent); text-decoration: underline; }
+		.empty { color: var(--muted); padding: 24px; text-align: center; background: #fff; }
+		.pagination { margin-top: 20px; display: flex; gap: 4px; align-items: center; justify-content: center; }
+		.pagination a {
+			display: inline-block;
+			min-width: 28px;
+			padding: 5px 8px;
+			text-align: center;
+			text-decoration: none;
+			color: #444;
+			border-radius: 4px;
+			font-size: 13px;
+		}
+		.pagination a:hover { background: #eef2f8; }
+		.pagination a.active { background: var(--accent); color: #fff; font-weight: 600; }
+		.pagination a.disabled { color: #ccc; pointer-events: none; }
+		.header-row { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 4px; }
+		.write-btn {
+			display: inline-block;
+			padding: 8px 16px;
+			background: var(--accent);
+			color: #fff;
+			border-radius: 4px;
+			text-decoration: none;
+			font-size: 13px;
+		}
+		.write-btn:hover { background: #235a92; }
+	</style>
+	<link rel="stylesheet" th:href="@{/css/nav.css}">
+</head>
+<body>
+	<div th:replace="~{fragments/nav :: nav('post')}"></div>
+	<div class="wrap">
+		<div class="header-row">
+			<h1>게시글 목록</h1>
+			<a class="write-btn" th:href="@{/posts/new}">글쓰기</a>
+		</div>
+		<p class="sub" th:text="|전체 ${postPage.totalCount}건 · ${postPage.currentPage} / ${postPage.totalPages} 페이지|"></p>
+
+		<table th:if="${!#lists.isEmpty(postPage.posts)}">
+			<thead>
+				<tr>
+					<th class="num">번호</th>
+					<th>제목</th>
+					<th class="view">조회수</th>
+					<th class="date">등록일</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="post : ${postPage.posts}">
+					<td class="num" th:text="${post.articleId}"></td>
+					<td>
+						<a class="title-link" th:href="@{/posts/{id}(id=${post.articleId})}" th:text="${post.title}"></a>
+					</td>
+					<td class="view" th:text="${post.viewCnt}"></td>
+					<td class="date" th:text="${#temporals.format(post.regDt, 'yyyy-MM-dd HH:mm')}"></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<p class="empty" th:if="${#lists.isEmpty(postPage.posts)}">등록된 게시글이 없습니다.</p>
+
+		<div class="pagination" th:if="${postPage.totalPages > 1}">
+			<a th:href="@{/posts(page=1)}"
+			   th:classappend="${postPage.currentPage <= 1} ? 'disabled'">«</a>
+			<a th:href="@{/posts(page=${postPage.currentPage - 1})}"
+			   th:classappend="${postPage.currentPage <= 1} ? 'disabled'">‹</a>
+			<span th:each="p : ${#numbers.sequence(1, postPage.totalPages)}">
+				<a th:href="@{/posts(page=${p})}"
+				   th:text="${p}"
+				   th:classappend="${p == postPage.currentPage} ? 'active'"></a>
+			</span>
+			<a th:href="@{/posts(page=${postPage.currentPage + 1})}"
+			   th:classappend="${postPage.currentPage >= postPage.totalPages} ? 'disabled'">›</a>
+			<a th:href="@{/posts(page=${postPage.totalPages})}"
+			   th:classappend="${postPage.currentPage >= postPage.totalPages} ? 'disabled'">»</a>
+		</div>
+	</div>
+</body>
+</html>

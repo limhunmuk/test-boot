@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.test.boot.notice.NoticeMapper">
+<mapper namespace="com.test.boot.domain.notice.mapper.NoticeMapper">
 
-	<select id="selectNoticeList" resultType="com.test.boot.notice.NoticeVO">
+	<select id="selectNoticeList" resultType="com.test.boot.domain.notice.vo.NoticeVO">
 		SELECT
 			notice_id, upload_file_id, title, content, status_cd,
 			view_cnt, like_cnt, important_yn, del_yn,
@@ -11,5 +11,52 @@
 		WHERE del_yn = 'N'
 		ORDER BY important_yn DESC, notice_id DESC
 	</select>
+
+	<select id="selectNotice" parameterType="long" resultType="com.test.boot.domain.notice.vo.NoticeVO">
+		SELECT
+			notice_id, upload_file_id, title, content, status_cd,
+			view_cnt, like_cnt, important_yn, del_yn,
+			reg_dt, reg_id, reg_ip, mod_dt, mod_id, mod_ip
+		FROM notice
+		WHERE notice_id = #{noticeId}
+	</select>
+
+	<select id="selectNoticeListPaged" resultType="com.test.boot.domain.notice.vo.NoticeVO">
+		SELECT
+			notice_id, upload_file_id, title, content, status_cd,
+			view_cnt, like_cnt, important_yn, del_yn,
+			reg_dt, reg_id, reg_ip, mod_dt, mod_id, mod_ip
+		FROM notice
+		WHERE del_yn = 'N'
+		ORDER BY important_yn DESC, notice_id DESC
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+
+	<select id="selectNoticeCount" resultType="long">
+		SELECT COUNT(*)
+		FROM notice
+		WHERE del_yn = 'N'
+	</select>
+
+	<insert id="insertNotice" parameterType="com.test.boot.domain.notice.vo.NoticeVO" useGeneratedKeys="true" keyProperty="noticeId">
+		INSERT INTO notice (title, content, status_cd, view_cnt, important_yn, del_yn, reg_dt, reg_id)
+		VALUES (#{title}, #{content}, 'A', 0, #{importantYn}, 'N', NOW(), #{regId})
+	</insert>
+
+	<update id="updateNotice" parameterType="com.test.boot.domain.notice.vo.NoticeVO">
+		UPDATE notice
+		SET title = #{title},
+			content = #{content},
+			important_yn = #{importantYn},
+			mod_dt = NOW(),
+			mod_id = #{modId}
+		WHERE notice_id = #{noticeId}
+	</update>
+
+	<update id="increaseViewCount" parameterType="long">
+		UPDATE notice
+		SET view_cnt = view_cnt + 1
+		WHERE notice_id = #{noticeId}
+	</update>
 
 </mapper>

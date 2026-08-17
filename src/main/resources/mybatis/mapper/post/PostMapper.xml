@@ -1,24 +1,61 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.test.boot.post.PostMapper">
+<mapper namespace="com.test.boot.domain.post.mapper.PostMapper">
 
-	<select id="selectPostList" resultType="com.test.boot.post.PostVO">
+	<select id="selectPostList" resultType="com.test.boot.domain.post.vo.PostVO">
 		SELECT
 			article_id, group_cd, detail_cd, title, content, status_cd,
-			view_cnt, like_cnt, upload_file_id, del_yn,
+			view_cnt, upload_file_id, del_yn,
 			reg_dt, reg_id, reg_ip, mod_dt, mod_id, mod_ip
 		FROM post
 		WHERE del_yn = 'N'
 		ORDER BY article_id DESC
 	</select>
 
-	<select id="selectPost" parameterType="long" resultType="com.test.boot.post.PostVO">
+	<select id="selectPost" parameterType="long" resultType="com.test.boot.domain.post.vo.PostVO">
 		SELECT
 			article_id, group_cd, detail_cd, title, content, status_cd,
-			view_cnt, like_cnt, upload_file_id, del_yn,
+			view_cnt, upload_file_id, del_yn,
 			reg_dt, reg_id, reg_ip, mod_dt, mod_id, mod_ip
 		FROM post
 		WHERE article_id = #{articleId}
 	</select>
+
+	<select id="selectPostListPaged" resultType="com.test.boot.domain.post.vo.PostVO">
+		SELECT
+			article_id, group_cd, detail_cd, title, content, status_cd,
+			view_cnt, upload_file_id, del_yn,
+			reg_dt, reg_id, reg_ip, mod_dt, mod_id, mod_ip
+		FROM post
+		WHERE del_yn = 'N'
+		ORDER BY article_id DESC
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+
+	<select id="selectPostCount" resultType="long">
+		SELECT COUNT(*)
+		FROM post
+		WHERE del_yn = 'N'
+	</select>
+
+	<insert id="insertPost" parameterType="com.test.boot.domain.post.vo.PostVO" useGeneratedKeys="true" keyProperty="articleId">
+		INSERT INTO post (title, content, status_cd, view_cnt, del_yn, reg_dt, reg_id)
+		VALUES (#{title}, #{content}, 'A', 0, 'N', NOW(), #{regId})
+	</insert>
+
+	<update id="updatePost" parameterType="com.test.boot.domain.post.vo.PostVO">
+		UPDATE post
+		SET title = #{title},
+			content = #{content},
+			mod_dt = NOW(),
+			mod_id = #{modId}
+		WHERE article_id = #{articleId}
+	</update>
+
+	<update id="increaseViewCount" parameterType="long">
+		UPDATE post
+		SET view_cnt = view_cnt + 1
+		WHERE article_id = #{articleId}
+	</update>
 
 </mapper>

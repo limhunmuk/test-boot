@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<nav th:fragment="nav(active)" class="site-nav">
+		<div class="nav-inner">
+			<a class="brand" th:href="@{/}">TEST-BOOT</a>
+			<div class="nav-links">
+				<a th:href="@{/}" th:classappend="${active == 'home'} ? 'active'">홈</a>
+				<a th:href="@{/notices}" th:classappend="${active == 'notice'} ? 'active'">공지사항</a>
+				<a th:href="@{/posts}" th:classappend="${active == 'post'} ? 'active'">게시글</a>
+			</div>
+			<div class="nav-auth">
+				<a th:href="@{/login}">로그인</a>
+				<a th:href="@{/logout}">로그아웃</a>
+				<a th:href="@{/mypage}">내정보</a>
+			</div>
+		</div>
+	</nav>
+</body>
+</html>
