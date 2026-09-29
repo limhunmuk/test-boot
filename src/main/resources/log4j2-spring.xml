@@ -3,14 +3,14 @@
 <Configuration>
     <Properties>
         <Property name="LOG_PATTERN">%d %5p [%c] %enc{%m}{CRLF}%n</Property>
-        <Property name="LOG_PATH">/home/test-boot/log</Property>
+        <Property name="LOG_PATH">/home/pungdong/log</Property>
     </Properties>
     <Appenders>
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout pattern="${LOG_PATTERN}" />
         </Console>
         <RollingFile name="fileAppender"
-                     filePattern="${LOG_PATH}/test-boot-%d{yyyy-MM-dd}.log">
+                     filePattern="${LOG_PATH}/pungdong-%d{yyyy-MM-dd}.log">
             <PatternLayout pattern="${LOG_PATTERN}" />
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true" />
@@ -25,7 +25,7 @@
                 <AppenderRef ref="fileAppender" />
             </SpringProfile>
         </Logger>
-        <Logger name="com.test.boot" level="INFO" additivity="false">
+        <Logger name="kr.go.egov.pungdong" level="INFO" additivity="false">
             <AppenderRef ref="console" />
             <SpringProfile name="prod">
                 <AppenderRef ref="fileAppender" />

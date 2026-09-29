@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.go.egov.pungdong.domain.menu.mapper.MenuMapper">
+
+	<select id="selectMenuList" resultType="kr.go.egov.pungdong.domain.menu.vo.MenuVO">
+		SELECT
+			menu_id, menu_nm, menu_key, menu_type, url, sort_order, required_role
+		FROM menu
+		ORDER BY sort_order
+	</select>
+
+	<select id="selectMenu" resultType="kr.go.egov.pungdong.domain.menu.vo.MenuVO">
+		SELECT
+			menu_id, menu_nm, menu_key, menu_type, url, sort_order, required_role
+		FROM menu
+		WHERE menu_id = #{menuId}
+	</select>
+
+	<select id="selectMaxSortOrder" resultType="java.lang.Integer">
+		SELECT MAX(sort_order)
+		FROM menu
+	</select>
+
+	<insert id="insertMenu" useGeneratedKeys="true" keyProperty="menuId">
+		INSERT INTO menu (menu_nm, menu_key, menu_type, url, sort_order, required_role)
+		VALUES (#{menuNm}, #{menuKey}, #{menuType}, #{url}, #{sortOrder}, #{requiredRole})
+	</insert>
+
+	<update id="updateMenu">
+		UPDATE menu
+		SET menu_nm = #{menuNm},
+			menu_key = #{menuKey},
+			menu_type = #{menuType},
+			url = #{url},
+			sort_order = #{sortOrder},
+			required_role = #{requiredRole}
+		WHERE menu_id = #{menuId}
+	</update>
+
+	<delete id="deleteMenu">
+		DELETE FROM menu
+		WHERE menu_id = #{menuId}
+	</delete>
+
+</mapper>

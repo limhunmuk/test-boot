@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.go.egov.pungdong.domain.ipacl.mapper.IpAclMapper">
+
+	<select id="selectIpAclList" resultType="kr.go.egov.pungdong.domain.ipacl.vo.IpAclVO">
+		SELECT
+			acl_id, ip_addr, list_type, description, use_yn,
+			reg_dt, reg_id, reg_ip, mod_dt, mod_id, mod_ip
+		FROM admin_ip_acl
+		ORDER BY acl_id DESC
+	</select>
+
+	<select id="selectIpAcl" resultType="kr.go.egov.pungdong.domain.ipacl.vo.IpAclVO">
+		SELECT
+			acl_id, ip_addr, list_type, description, use_yn,
+			reg_dt, reg_id, reg_ip, mod_dt, mod_id, mod_ip
+		FROM admin_ip_acl
+		WHERE acl_id = #{aclId}
+	</select>
+
+	<select id="selectActiveIpAddrsByType" resultType="java.lang.String">
+		SELECT ip_addr
+		FROM admin_ip_acl
+		WHERE list_type = #{listType}
+		AND use_yn = 'Y'
+	</select>
+
+	<insert id="insertIpAcl" useGeneratedKeys="true" keyProperty="aclId">
+		INSERT INTO admin_ip_acl (ip_addr, list_type, description, use_yn, reg_dt, reg_id, reg_ip)
+		VALUES (#{ipAddr}, #{listType}, #{description}, #{useYn}, #{regDt}, #{regId}, #{regIp})
+	</insert>
+
+	<update id="updateIpAcl">
+		UPDATE admin_ip_acl
+		SET ip_addr = #{ipAddr},
+			list_type = #{listType},
+			description = #{description},
+			use_yn = #{useYn},
+			mod_dt = #{modDt},
+			mod_id = #{modId},
+			mod_ip = #{modIp}
+		WHERE acl_id = #{aclId}
+	</update>
+
+	<delete id="deleteIpAcl">
+		DELETE FROM admin_ip_acl
+		WHERE acl_id = #{aclId}
+	</delete>
+
+	<select id="selectPolicyMode" resultType="java.lang.String">
+		SELECT policy_mode
+		FROM admin_ip_policy
+		WHERE policy_id = 1
+	</select>
+
+	<update id="updatePolicyMode">
+		UPDATE admin_ip_policy
+		SET policy_mode = #{policyMode},
+			mod_dt = CURRENT_TIMESTAMP,
+			mod_id = #{modId}
+		WHERE policy_id = 1
+	</update>
+
+</mapper>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.test.boot.domain.uploadfile.mapper.UploadFileMapper">
+<mapper namespace="kr.go.egov.pungdong.domain.uploadfile.mapper.UploadFileMapper">
 
-	<select id="selectUploadFileList" resultType="com.test.boot.domain.uploadfile.vo.UploadFileVO">
+	<select id="selectUploadFileList" resultType="kr.go.egov.pungdong.domain.uploadfile.vo.UploadFileVO">
 		SELECT
 			upload_file_id, target_type, target_id, org_file_nm, real_file_nm, file_size, del_yn, reg_dt
 		FROM upload_file
 		ORDER BY upload_file_id DESC
 	</select>
 
-	<select id="selectUploadFileListByTarget" resultType="com.test.boot.domain.uploadfile.vo.UploadFileVO">
+	<select id="selectUploadFileListByTarget" resultType="kr.go.egov.pungdong.domain.uploadfile.vo.UploadFileVO">
 		SELECT
 			upload_file_id, target_type, target_id, org_file_nm, real_file_nm, file_size, del_yn, reg_dt
 		FROM upload_file
@@ -19,14 +19,14 @@
 		ORDER BY upload_file_id ASC
 	</select>
 
-	<select id="selectUploadFile" parameterType="long" resultType="com.test.boot.domain.uploadfile.vo.UploadFileVO">
+	<select id="selectUploadFile" parameterType="long" resultType="kr.go.egov.pungdong.domain.uploadfile.vo.UploadFileVO">
 		SELECT
 			upload_file_id, target_type, target_id, org_file_nm, real_file_nm, file_size, del_yn, reg_dt
 		FROM upload_file
 		WHERE upload_file_id = #{uploadFileId}
 	</select>
 
-	<insert id="insertUploadFile" parameterType="com.test.boot.domain.uploadfile.vo.UploadFileVO"
+	<insert id="insertUploadFile" parameterType="kr.go.egov.pungdong.domain.uploadfile.vo.UploadFileVO"
 			useGeneratedKeys="true" keyProperty="uploadFileId">
 		INSERT INTO upload_file (target_type, target_id, org_file_nm, real_file_nm, file_size, del_yn, reg_dt)
 		VALUES (#{targetType}, #{targetId}, #{orgFileNm}, #{realFileNm}, #{fileSize}, 'N', NOW())

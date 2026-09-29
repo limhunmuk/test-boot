@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.test.boot.domain.post.mapper.PostMapper">
+<mapper namespace="kr.go.egov.pungdong.domain.post.mapper.PostMapper">
 
-	<select id="selectPostList" resultType="com.test.boot.domain.post.vo.PostVO">
+	<select id="selectPostList" resultType="kr.go.egov.pungdong.domain.post.vo.PostVO">
 		SELECT
 			article_id, group_cd, detail_cd, title, content, status_cd,
 			view_cnt, upload_file_id, del_yn,
@@ -12,7 +12,7 @@
 		ORDER BY article_id DESC
 	</select>
 
-	<select id="selectPost" parameterType="long" resultType="com.test.boot.domain.post.vo.PostVO">
+	<select id="selectPost" parameterType="long" resultType="kr.go.egov.pungdong.domain.post.vo.PostVO">
 		SELECT
 			article_id, group_cd, detail_cd, title, content, status_cd,
 			view_cnt, upload_file_id, del_yn,
@@ -21,13 +21,29 @@
 		WHERE article_id = #{articleId}
 	</select>
 
-	<select id="selectPostListPaged" resultType="com.test.boot.domain.post.vo.PostVO">
+	<sql id="postSearchWhere">
+		WHERE del_yn = 'N'
+		<if test="condition.title != null and condition.title != ''">
+			AND title LIKE CONCAT('%', #{condition.title}, '%')
+		</if>
+		<if test="condition.regId != null and condition.regId != ''">
+			AND reg_id LIKE CONCAT('%', #{condition.regId}, '%')
+		</if>
+		<if test="condition.startDate != null">
+			AND reg_dt &gt;= #{condition.startDate}
+		</if>
+		<if test="condition.endDate != null">
+			AND reg_dt &lt; DATE_ADD(#{condition.endDate}, INTERVAL 1 DAY)
+		</if>
+	</sql>
+
+	<select id="selectPostListPaged" resultType="kr.go.egov.pungdong.domain.post.vo.PostVO">
 		SELECT
 			article_id, group_cd, detail_cd, title, content, status_cd,
 			view_cnt, upload_file_id, del_yn,
 			reg_dt, reg_id, reg_ip, mod_dt, mod_id, mod_ip
 		FROM post
-		WHERE del_yn = 'N'
+		<include refid="postSearchWhere"/>
 		ORDER BY article_id DESC
 		LIMIT #{limit} OFFSET #{offset}
 	</select>
@@ -35,15 +51,15 @@
 	<select id="selectPostCount" resultType="long">
 		SELECT COUNT(*)
 		FROM post
-		WHERE del_yn = 'N'
+		<include refid="postSearchWhere"/>
 	</select>
 
-	<insert id="insertPost" parameterType="com.test.boot.domain.post.vo.PostVO" useGeneratedKeys="true" keyProperty="articleId">
+	<insert id="insertPost" parameterType="kr.go.egov.pungdong.domain.post.vo.PostVO" useGeneratedKeys="true" keyProperty="articleId">
 		INSERT INTO post (title, content, status_cd, view_cnt, del_yn, reg_dt, reg_id)
 		VALUES (#{title}, #{content}, 'A', 0, 'N', NOW(), #{regId})
 	</insert>
 
-	<update id="updatePost" parameterType="com.test.boot.domain.post.vo.PostVO">
+	<update id="updatePost" parameterType="kr.go.egov.pungdong.domain.post.vo.PostVO">
 		UPDATE post
 		SET title = #{title},
 			content = #{content},

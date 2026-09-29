@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.test.boot.domain.notice.mapper.NoticeMapper">
+<mapper namespace="kr.go.egov.pungdong.domain.notice.mapper.NoticeMapper">
 
-	<select id="selectNoticeList" resultType="com.test.boot.domain.notice.vo.NoticeVO">
+	<select id="selectNoticeList" resultType="kr.go.egov.pungdong.domain.notice.vo.NoticeVO">
 		SELECT
 			notice_id, upload_file_id, title, content, status_cd,
 			view_cnt, like_cnt, important_yn, del_yn,
 			reg_dt, reg_id, reg_ip, mod_dt, mod_id, mod_ip
 		FROM notice
 		WHERE del_yn = 'N'
-		ORDER BY important_yn DESC, notice_id DESC
+		ORDER BY CASE WHEN important_yn = 'Y' THEN 0 ELSE 1 END, notice_id DESC
 	</select>
 
-	<select id="selectNotice" parameterType="long" resultType="com.test.boot.domain.notice.vo.NoticeVO">
+	<select id="selectNotice" parameterType="long" resultType="kr.go.egov.pungdong.domain.notice.vo.NoticeVO">
 		SELECT
 			notice_id, upload_file_id, title, content, status_cd,
 			view_cnt, like_cnt, important_yn, del_yn,
@@ -21,29 +21,45 @@
 		WHERE notice_id = #{noticeId}
 	</select>
 
-	<select id="selectNoticeListPaged" resultType="com.test.boot.domain.notice.vo.NoticeVO">
+	<sql id="noticeSearchWhere">
+		WHERE del_yn = 'N'
+		<if test="condition.title != null and condition.title != ''">
+			AND title LIKE CONCAT('%', #{condition.title}, '%')
+		</if>
+		<if test="condition.regId != null and condition.regId != ''">
+			AND reg_id LIKE CONCAT('%', #{condition.regId}, '%')
+		</if>
+		<if test="condition.startDate != null">
+			AND reg_dt &gt;= #{condition.startDate}
+		</if>
+		<if test="condition.endDate != null">
+			AND reg_dt &lt; DATE_ADD(#{condition.endDate}, INTERVAL 1 DAY)
+		</if>
+	</sql>
+
+	<select id="selectNoticeListPaged" resultType="kr.go.egov.pungdong.domain.notice.vo.NoticeVO">
 		SELECT
 			notice_id, upload_file_id, title, content, status_cd,
 			view_cnt, like_cnt, important_yn, del_yn,
 			reg_dt, reg_id, reg_ip, mod_dt, mod_id, mod_ip
 		FROM notice
-		WHERE del_yn = 'N'
-		ORDER BY important_yn DESC, notice_id DESC
+		<include refid="noticeSearchWhere"/>
+		ORDER BY CASE WHEN important_yn = 'Y' THEN 0 ELSE 1 END, notice_id DESC
 		LIMIT #{limit} OFFSET #{offset}
 	</select>
 
 	<select id="selectNoticeCount" resultType="long">
 		SELECT COUNT(*)
 		FROM notice
-		WHERE del_yn = 'N'
+		<include refid="noticeSearchWhere"/>
 	</select>
 
-	<insert id="insertNotice" parameterType="com.test.boot.domain.notice.vo.NoticeVO" useGeneratedKeys="true" keyProperty="noticeId">
+	<insert id="insertNotice" parameterType="kr.go.egov.pungdong.domain.notice.vo.NoticeVO" useGeneratedKeys="true" keyProperty="noticeId">
 		INSERT INTO notice (title, content, status_cd, view_cnt, important_yn, del_yn, reg_dt, reg_id)
 		VALUES (#{title}, #{content}, 'A', 0, #{importantYn}, 'N', NOW(), #{regId})
 	</insert>
 
-	<update id="updateNotice" parameterType="com.test.boot.domain.notice.vo.NoticeVO">
+	<update id="updateNotice" parameterType="kr.go.egov.pungdong.domain.notice.vo.NoticeVO">
 		UPDATE notice
 		SET title = #{title},
 			content = #{content},

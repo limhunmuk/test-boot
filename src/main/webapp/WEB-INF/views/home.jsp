@@ -1,0 +1,44 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
+<t:layout title="TEST-BOOT" active="home">
+	<style>
+		body {
+			font-family: -apple-system, "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+			margin: 0;
+			background: #fafafa;
+			color: #222;
+		}
+		.hero { max-width: 960px; margin: 0 auto; padding: 80px 24px; text-align: center; }
+		.hero h1 { font-size: 26px; margin: 0 0 10px; }
+		.hero p { color: #888; margin: 0 0 32px; }
+		.cards { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+		.card {
+			width: 220px;
+			padding: 24px;
+			background: #fff;
+			border-radius: 6px;
+			box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+			text-decoration: none;
+			color: #222;
+		}
+		.card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+		.card .title { font-weight: 600; margin-bottom: 6px; }
+		.card .desc { font-size: 13px; color: #888; }
+	</style>
+
+	<div class="hero">
+		<h1>TEST-BOOT 샘플 프로젝트</h1>
+		<p>eGovFrame Boot + MyBatis + JSP 데모</p>
+		<div class="cards">
+			<a class="card" href="<c:url value="/notices"/>">
+				<div class="title">공지사항</div>
+				<div class="desc">공지사항 목록 및 첨부파일</div>
+			</a>
+			<a class="card" href="<c:url value="/posts"/>">
+				<div class="title">게시글</div>
+				<div class="desc">게시글 목록 및 첨부파일</div>
+			</a>
+		</div>
+	</div>
+</t:layout>

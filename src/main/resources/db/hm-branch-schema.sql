@@ -97,3 +97,30 @@ CREATE TABLE `member` (
   PRIMARY KEY (`member_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+DROP TABLE IF EXISTS `admin_ip_acl`;
+CREATE TABLE `admin_ip_acl` (
+  `acl_id` bigint NOT NULL AUTO_INCREMENT COMMENT 'IP 등록 일련번호',
+  `ip_addr` varchar(50) NOT NULL COMMENT 'IP 주소',
+  `list_type` varchar(10) NOT NULL COMMENT '목록 유형 (WHITELIST/BLACKLIST)',
+  `description` varchar(200) DEFAULT NULL COMMENT '설명',
+  `use_yn` char(1) NOT NULL DEFAULT 'Y' COMMENT '사용 여부',
+  `reg_dt` datetime DEFAULT NULL COMMENT '등록 일시',
+  `reg_id` varchar(20) DEFAULT NULL COMMENT '등록자 ID',
+  `reg_ip` varchar(100) DEFAULT NULL COMMENT '등록자 IP',
+  `mod_dt` datetime DEFAULT NULL COMMENT '수정 일시',
+  `mod_id` varchar(20) DEFAULT NULL COMMENT '수정자 ID',
+  `mod_ip` varchar(100) DEFAULT NULL COMMENT '수정자 IP',
+  PRIMARY KEY (`acl_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DROP TABLE IF EXISTS `admin_ip_policy`;
+CREATE TABLE `admin_ip_policy` (
+  `policy_id` smallint NOT NULL DEFAULT '1' COMMENT '정책 ID(단일 행)',
+  `policy_mode` varchar(10) NOT NULL DEFAULT 'BLACKLIST' COMMENT '접근 정책 모드 (WHITELIST/BLACKLIST)',
+  `mod_dt` datetime DEFAULT NULL COMMENT '수정 일시',
+  `mod_id` varchar(20) DEFAULT NULL COMMENT '수정자 ID',
+  PRIMARY KEY (`policy_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `admin_ip_policy` (`policy_id`, `policy_mode`) VALUES (1, 'BLACKLIST');
+

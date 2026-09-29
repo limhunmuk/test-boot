@@ -1,14 +1,51 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.test.boot.domain.member.mapper.MemberMapper">
+<mapper namespace="kr.go.egov.pungdong.domain.member.mapper.MemberMapper">
 
-	<select id="selectMemberList" resultType="com.test.boot.domain.member.vo.MemberVO">
+	<select id="selectMemberList" resultType="kr.go.egov.pungdong.domain.member.vo.MemberVO">
 		SELECT
-			member_id, login_id, password, mem_nm, nick_nm, mem_type, join_dt,
+			member_id, login_id, password, mem_nm, nick_nm, mem_type, role_cd, join_dt,
 			phone_no, addr, addr_detail, del_yn,
 			reg_dt, reg_id, reg_ip, mod_dt, mod_id, mod_ip
 		FROM member
 		ORDER BY member_id DESC
 	</select>
+
+	<select id="selectMemberByLoginId" resultType="kr.go.egov.pungdong.domain.member.vo.MemberVO">
+		SELECT
+			member_id, login_id, password, mem_nm, nick_nm, mem_type, role_cd, join_dt,
+			phone_no, addr, addr_detail, del_yn,
+			reg_dt, reg_id, reg_ip, mod_dt, mod_id, mod_ip
+		FROM member
+		WHERE login_id = #{loginId}
+			AND del_yn = 'N'
+	</select>
+
+	<update id="updateMemberInfo">
+		UPDATE member
+		SET mem_nm = #{memNm},
+			nick_nm = #{nickNm},
+			phone_no = #{phoneNo},
+			addr = #{addr},
+			addr_detail = #{addrDetail}
+		WHERE login_id = #{loginId}
+			AND del_yn = 'N'
+	</update>
+
+	<update id="updatePassword">
+		UPDATE member
+		SET password = #{password}
+		WHERE login_id = #{loginId}
+			AND del_yn = 'N'
+	</update>
+
+	<update id="updateLastLogin">
+		UPDATE member
+		SET mod_dt = NOW(),
+			mod_id = #{loginId},
+			mod_ip = #{ip}
+		WHERE login_id = #{loginId}
+			AND del_yn = 'N'
+	</update>
 
 </mapper>
