@@ -8,6 +8,7 @@
 	<meta charset="UTF-8">
 	<title>${empty title ? 'TEST-BOOT' : title}</title>
 	<link rel="stylesheet" href="<c:url value="/css/nav.css"/>">
+	<script src="<c:url value='/js/date-format.js'/>" defer></script>
 </head>
 <body>
 	<jsp:include page="/WEB-INF/views/fragments/nav.jsp">

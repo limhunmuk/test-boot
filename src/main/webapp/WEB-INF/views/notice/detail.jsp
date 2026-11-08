@@ -2,7 +2,6 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
-<%@ taglib prefix="tb" uri="http://egov.go.kr/pungdong/functions" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <t:layout title="${notice.title}" active="notice">
 	<style>
@@ -66,7 +65,7 @@
 				<h1><c:out value="${notice.title}"/></h1>
 				<div class="meta">
 					<span>작성자: <c:out value="${notice.regId}"/></span>
-					<span>등록일: ${tb:formatDateTime(notice.regDt, 'yyyy-MM-dd HH:mm')}</span>
+					<span>등록일: <time data-server-datetime="<c:out value='${notice.regDt}'/>" data-date-format="yyyy-MM-dd HH:mm"><c:out value="${notice.regDt}"/></time></span>
 					<span>조회수: <c:out value="${notice.viewCnt}"/></span>
 				</div>
 			</div>

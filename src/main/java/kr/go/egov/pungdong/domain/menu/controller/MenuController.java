@@ -23,6 +23,10 @@ public class MenuController {
 	public String link(@PathVariable Long menuId, Model model) {
 		MenuVO menu = menuService.getMenu(menuId)
 			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 메뉴입니다."));
+		if (!"URL".equals(menu.getMenuType()) || menuService.getVisibleMenuList().stream()
+				.noneMatch(visible -> visible.getMenuId().equals(menuId))) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+		}
 		model.addAttribute("menu", menu);
 		return "menu/link";
 	}

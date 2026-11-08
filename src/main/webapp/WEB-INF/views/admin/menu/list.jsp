@@ -73,6 +73,7 @@
 		</div>
 
 		<c:if test="${not empty menuList}">
+			<c:if test="${not empty menuError}"><p role="alert"><c:out value="${menuError}"/></p></c:if>
 			<table>
 				<thead>
 					<tr>
@@ -83,6 +84,7 @@
 						<th>URL</th>
 						<th class="order">순서</th>
 						<th class="type">권한</th>
+						<th>사용 / 노출</th>
 						<th class="actions">관리</th>
 					</tr>
 				</thead>
@@ -90,12 +92,13 @@
 					<c:forEach items="${menuList}" var="menu">
 						<tr>
 							<td class="num"><c:out value="${menu.menuId}"/></td>
-							<td><c:out value="${menu.menuNm}"/></td>
+							<td><c:forEach begin="1" end="${menu.depth}">↳ </c:forEach><c:out value="${menu.menuNm}"/></td>
 							<td><c:out value="${menu.menuKey}"/></td>
 							<td class="type"><span class="type-badge"><c:out value="${menu.menuType}"/></span></td>
 							<td><c:out value="${menu.url}"/></td>
 							<td class="order"><c:out value="${menu.sortOrder}"/></td>
 							<td class="type">${empty menu.requiredRole ? '전체' : menu.requiredRole}</td>
+							<td><c:out value="${menu.useYn}"/> / <c:out value="${menu.publicYn}"/></td>
 							<td class="actions">
 								<a href="<c:url value="/admin/menus/${menu.menuId}/edit"/>">수정</a>
 								<form action="<c:url value="/admin/menus/${menu.menuId}/delete"/>" method="post"

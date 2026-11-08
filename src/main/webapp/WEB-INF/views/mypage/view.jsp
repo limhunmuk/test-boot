@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="tb" uri="http://egov.go.kr/pungdong/functions" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <t:layout title="내 정보" active="">
 	<style>
@@ -110,13 +109,13 @@
 			</div>
 			<div class="info-row">
 				<span class="label">가입일</span>
-				<span class="value">${tb:formatDateTime(member.joinDt, 'yyyy-MM-dd')}</span>
+				<span class="value"><time data-server-datetime="<c:out value='${member.joinDt}'/>" data-date-format="yyyy-MM-dd"><c:out value="${member.joinDt}"/></time></span>
 			</div>
 			<div class="info-row">
 				<span class="label">마지막 로그인</span>
 				<span class="value">
 					<c:choose>
-						<c:when test="${not empty member.modDt}">${tb:formatDateTime(member.modDt, 'yyyy-MM-dd HH:mm')} (<c:out value="${member.modIp}"/>)</c:when>
+						<c:when test="${not empty member.modDt}"><time data-server-datetime="<c:out value='${member.modDt}'/>" data-date-format="yyyy-MM-dd HH:mm"><c:out value="${member.modDt}"/></time> (<c:out value="${member.modIp}"/>)</c:when>
 						<c:otherwise>-</c:otherwise>
 					</c:choose>
 				</span>

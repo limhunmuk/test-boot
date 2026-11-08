@@ -64,6 +64,21 @@
 			</c:choose>
 			<form:form action="${formAction}" modelAttribute="menuRequest" method="post">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+				<form:errors path="*" element="p" cssClass="error"/>
+				<div class="field">
+					<label for="parentMenuId">상위 메뉴</label>
+					<form:select id="parentMenuId" path="parentMenuId">
+						<form:option value="">최상위 메뉴</form:option>
+						<c:forEach items="${parentMenus}" var="parent">
+							<c:if test="parent.menuId != menuId">
+								<form:option value="${parent.menuId}"><c:out value="${parent.menuNm}"/> (<c:out value="${parent.menuKey}"/>)</form:option>
+							</c:if>
+						</c:forEach>
+					</form:select>
+				</div>
+				<div class="field"><label for="menuDc">메뉴 설명</label><form:input id="menuDc" path="menuDc"/></div>
+				<div class="field"><label for="useYn">사용 여부</label><form:select id="useYn" path="useYn"><form:option value="Y">사용</form:option><form:option value="N">미사용</form:option></form:select></div>
+				<div class="field"><label for="publicYn">메뉴 노출</label><form:select id="publicYn" path="publicYn"><form:option value="Y">노출</form:option><form:option value="N">숨김</form:option></form:select></div>
 				<div class="field">
 					<label for="menuNm">메뉴명</label>
 					<form:input id="menuNm" path="menuNm"/>
@@ -95,7 +110,7 @@
 				<div class="field">
 					<label for="requiredRole">필요 권한</label>
 					<form:select id="requiredRole" path="requiredRole">
-						<form:option value="">없음 (전체 공개)</form:option>
+						<form:option value="">로그인 사용자 전체</form:option>
 						<form:option value="USER">USER (로그인 사용자)</form:option>
 						<form:option value="ADMIN">ADMIN (관리자)</form:option>
 					</form:select>

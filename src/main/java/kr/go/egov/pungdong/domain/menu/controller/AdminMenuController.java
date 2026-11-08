@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.go.egov.pungdong.domain.menu.dto.MenuRequestDTO;
 import kr.go.egov.pungdong.domain.menu.service.MenuService;
@@ -22,6 +23,9 @@ public class AdminMenuController {
 	public AdminMenuController(MenuService menuService) {
 		this.menuService = menuService;
 	}
+
+	@ModelAttribute("parentMenus")
+	public java.util.List<MenuVO> parentMenus() { return menuService.getMenuList(); }
 
 	@GetMapping("/admin/menus")
 	public String list(Model model) {
@@ -42,7 +46,11 @@ public class AdminMenuController {
 		if (bindingResult.hasErrors()) {
 			return "admin/menu/form";
 		}
-		menuService.createMenu(request);
+		try { menuService.createMenu(request); }
+		catch (IllegalArgumentException ex) {
+			bindingResult.reject("menu.invalid", ex.getMessage());
+			return "admin/menu/form";
+		}
 		return "redirect:/admin/menus";
 	}
 
@@ -58,6 +66,10 @@ public class AdminMenuController {
 		request.setUrl(menu.getUrl());
 		request.setSortOrder(menu.getSortOrder());
 		request.setRequiredRole(menu.getRequiredRole());
+		request.setParentMenuId(menu.getParentMenuId());
+		request.setMenuDc(menu.getMenuDc());
+		request.setUseYn(menu.getUseYn());
+		request.setPublicYn(menu.getPublicYn());
 
 		model.addAttribute("menuId", menuId);
 		model.addAttribute("menuRequest", request);
@@ -73,13 +85,19 @@ public class AdminMenuController {
 			model.addAttribute("menuId", menuId);
 			return "admin/menu/form";
 		}
-		menuService.updateMenu(menuId, request);
+		try { menuService.updateMenu(menuId, request); }
+		catch (IllegalArgumentException ex) {
+			bindingResult.reject("menu.invalid", ex.getMessage());
+			model.addAttribute("menuId", menuId);
+			return "admin/menu/form";
+		}
 		return "redirect:/admin/menus";
 	}
 
 	@PostMapping("/admin/menus/{menuId}/delete")
-	public String delete(@PathVariable Long menuId) {
-		menuService.deleteMenu(menuId);
+	public String delete(@PathVariable Long menuId, RedirectAttributes attributes) {
+		try { menuService.deleteMenu(menuId); }
+		catch (IllegalArgumentException ex) { attributes.addFlashAttribute("menuError", ex.getMessage()); }
 		return "redirect:/admin/menus";
 	}
 

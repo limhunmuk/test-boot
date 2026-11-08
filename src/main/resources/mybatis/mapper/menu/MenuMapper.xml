@@ -1,45 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="kr.go.egov.pungdong.domain.menu.mapper.MenuMapper">
-
-	<select id="selectMenuList" resultType="kr.go.egov.pungdong.domain.menu.vo.MenuVO">
-		SELECT
-			menu_id, menu_nm, menu_key, menu_type, url, sort_order, required_role
-		FROM menu
-		ORDER BY sort_order
-	</select>
-
-	<select id="selectMenu" resultType="kr.go.egov.pungdong.domain.menu.vo.MenuVO">
-		SELECT
-			menu_id, menu_nm, menu_key, menu_type, url, sort_order, required_role
-		FROM menu
-		WHERE menu_id = #{menuId}
-	</select>
-
-	<select id="selectMaxSortOrder" resultType="java.lang.Integer">
-		SELECT MAX(sort_order)
-		FROM menu
-	</select>
-
-	<insert id="insertMenu" useGeneratedKeys="true" keyProperty="menuId">
-		INSERT INTO menu (menu_nm, menu_key, menu_type, url, sort_order, required_role)
-		VALUES (#{menuNm}, #{menuKey}, #{menuType}, #{url}, #{sortOrder}, #{requiredRole})
-	</insert>
-
-	<update id="updateMenu">
-		UPDATE menu
-		SET menu_nm = #{menuNm},
-			menu_key = #{menuKey},
-			menu_type = #{menuType},
-			url = #{url},
-			sort_order = #{sortOrder},
-			required_role = #{requiredRole}
-		WHERE menu_id = #{menuId}
-	</update>
-
-	<delete id="deleteMenu">
-		DELETE FROM menu
-		WHERE menu_id = #{menuId}
-	</delete>
-
+<mapper namespace="CmsMenu">
+ <sql id="columns">menu_id, menu_nm, menu_key, menu_type, url, sort_order, required_role, parent_menu_id, menu_dc, use_yn, public_yn, reg_id, mod_id</sql>
+ <select id="selectMenuList" resultType="kr.go.egov.pungdong.domain.menu.vo.MenuVO">SELECT <include refid="columns"/> FROM menu ORDER BY sort_order, menu_id</select>
+ <select id="selectMenu" resultType="kr.go.egov.pungdong.domain.menu.vo.MenuVO">SELECT <include refid="columns"/> FROM menu WHERE menu_id = #{menuId}</select>
+ <select id="selectMaxSortOrder" resultType="java.lang.Integer">SELECT MAX(sort_order) FROM menu</select>
+ <select id="countChildren" resultType="java.lang.Integer">SELECT COUNT(*) FROM menu WHERE parent_menu_id = #{menuId}</select>
+ <select id="countMenuKey" resultType="java.lang.Integer">SELECT COUNT(*) FROM menu WHERE menu_key = #{menuKey}<if test="menuId != null"> AND menu_id != #{menuId}</if></select>
+ <insert id="insertMenu" useGeneratedKeys="true" keyProperty="menuId">
+ INSERT INTO menu (menu_nm, menu_key, menu_type, url, sort_order, required_role, parent_menu_id, menu_dc, use_yn, public_yn, reg_id, reg_dt, mod_id, mod_dt)
+ VALUES (#{menuNm}, #{menuKey}, #{menuType}, #{url}, #{sortOrder}, #{requiredRole}, #{parentMenuId}, #{menuDc}, #{useYn}, #{publicYn}, #{regId}, CURRENT_TIMESTAMP, #{modId}, CURRENT_TIMESTAMP)
+ </insert>
+ <update id="updateMenu">UPDATE menu SET menu_nm=#{menuNm}, menu_key=#{menuKey}, menu_type=#{menuType}, url=#{url}, sort_order=#{sortOrder}, required_role=#{requiredRole}, parent_menu_id=#{parentMenuId}, menu_dc=#{menuDc}, use_yn=#{useYn}, public_yn=#{publicYn}, mod_id=#{modId}, mod_dt=CURRENT_TIMESTAMP WHERE menu_id=#{menuId}</update>
+ <delete id="deleteMenu">DELETE FROM menu WHERE menu_id=#{menuId}</delete>
 </mapper>

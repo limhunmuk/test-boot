@@ -1,22 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <nav class="site-nav">
 	<div class="nav-inner">
 		<a class="brand" href="<c:url value="/"/>">TEST-BOOT</a>
-		<div class="nav-links">
-			<c:forEach items="${menus}" var="menu">
-				<c:choose>
-					<c:when test="${menu.menuType == 'URL'}">
-						<c:url value="/link/${menu.menuId}" var="menuHref"/>
-					</c:when>
-					<c:otherwise>
-						<c:url value="${menu.url}" var="menuHref"/>
-					</c:otherwise>
-				</c:choose>
-				<a href="${menuHref}" class="${param.active == menu.menuKey ? 'active' : ''}">${menu.menuNm}</a>
-			</c:forEach>
-		</div>
+		<ul class="nav-links"><t:menuTree menus="${menus}" active="${param.active}"/></ul>
 		<div class="nav-auth">
 			<sec:authorize access="!isAuthenticated()">
 				<a href="<c:url value="/login"/>">로그인</a>

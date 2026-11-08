@@ -1,5 +1,7 @@
 package kr.go.egov.pungdong.web.config;
 
+import jakarta.servlet.DispatcherType;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,11 +31,13 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http, LoginSuccessHandler loginSuccessHandler) throws Exception {
 		http
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/js/**", "/css/**", "/images/**").permitAll()
-				.requestMatchers("/", "/login", "/notices/**", "/posts/**").permitAll()
+				// JSP rendering is an internal forward after the original URL has been authorized.
+				.dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
+				.requestMatchers("/js/**", "/css/**", "/images/**", "/").permitAll()
+				.requestMatchers("/login", "/error").permitAll()
 				.requestMatchers("/mypage/**").authenticated()
 				.requestMatchers("/admin/**").hasRole("ADMIN")
-				.anyRequest().permitAll()
+				.anyRequest().authenticated()
 			)
 			.formLogin(form -> form
 				.loginPage("/login")

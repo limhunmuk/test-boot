@@ -12,5 +12,12 @@ public class MenuVO {
 	private String url;
 	private Integer sortOrder;
 	private String requiredRole;
+	private Long parentMenuId;
+	private String menuDc;
+	private String useYn;
+	private String publicYn;
+	private String regId;
+	private String modId;
+	private Integer depth;
 
 }

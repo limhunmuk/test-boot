@@ -55,7 +55,17 @@ CREATE TABLE menu (
   menu_type varchar(10) NOT NULL,
   url varchar(500) NOT NULL,
   sort_order int NOT NULL,
-  required_role varchar(20) DEFAULT NULL
+  required_role varchar(20) DEFAULT NULL,
+  parent_menu_id bigint REFERENCES menu(menu_id),
+  menu_dc varchar(500),
+  use_yn char(1) NOT NULL DEFAULT 'Y' CHECK (use_yn IN ('Y', 'N')),
+  public_yn char(1) NOT NULL DEFAULT 'Y' CHECK (public_yn IN ('Y', 'N')),
+  reg_id varchar(50),
+  reg_dt timestamp,
+  mod_id varchar(50),
+  mod_dt timestamp,
+  CONSTRAINT uq_menu_key UNIQUE (menu_key),
+  CONSTRAINT ck_menu_parent CHECK (parent_menu_id IS NULL OR parent_menu_id <> menu_id)
 );
 
 CREATE TABLE notice (
@@ -165,6 +175,7 @@ CREATE TABLE upload_file (
   del_yn char(1) NOT NULL DEFAULT 'N',
   reg_dt timestamp DEFAULT CURRENT_TIMESTAMP
 );
+
 CREATE INDEX idx_target ON upload_file (target_type, target_id, del_yn);
 COMMENT ON TABLE upload_file IS '공통 업로드 파일 관리';
 COMMENT ON COLUMN upload_file.upload_file_id IS '파일 PK';

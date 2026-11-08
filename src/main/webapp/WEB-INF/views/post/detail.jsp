@@ -4,7 +4,6 @@
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%@ taglib prefix="tb" uri="http://egov.go.kr/pungdong/functions" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <t:layout title="${post.title}" active="post">
 	<style>
@@ -128,7 +127,7 @@
 				<h1><c:out value="${post.title}"/></h1>
 				<div class="meta">
 					<span>작성자: <c:out value="${post.regId}"/></span>
-					<span>등록일: ${tb:formatDateTime(post.regDt, 'yyyy-MM-dd HH:mm:ss')}</span>
+					<span>등록일: <time data-server-datetime="<c:out value='${post.regDt}'/>" data-date-format="yyyy-MM-dd HH:mm:ss"><c:out value="${post.regDt}"/></time></span>
 					<span>조회수: <c:out value="${post.viewCnt}"/></span>
 				</div>
 			</div>
@@ -164,7 +163,7 @@
 						<li class="comment-item">
 							<div class="comment-meta">
 								<span class="comment-writer"><c:out value="${thread.comment.regId}"/></span>
-								<span class="comment-date">${tb:formatDateTime(thread.comment.regDt, 'yyyy-MM-dd HH:mm')}</span>
+								<span class="comment-date"><time data-server-datetime="<c:out value='${thread.comment.regDt}'/>" data-date-format="yyyy-MM-dd HH:mm"><c:out value="${thread.comment.regDt}"/></time></span>
 							</div>
 							<div class="comment-content"><c:out value="${thread.comment.content}"/></div>
 							<div class="comment-actions">
@@ -194,7 +193,7 @@
 										<li class="reply-item">
 											<div class="comment-meta">
 												<span class="comment-writer"><c:out value="${reply.regId}"/></span>
-												<span class="comment-date">${tb:formatDateTime(reply.regDt, 'yyyy-MM-dd HH:mm')}</span>
+												<span class="comment-date"><time data-server-datetime="<c:out value='${reply.regDt}'/>" data-date-format="yyyy-MM-dd HH:mm"><c:out value="${reply.regDt}"/></time></span>
 											</div>
 											<div class="comment-content"><c:out value="${reply.content}"/></div>
 											<c:if test="${not empty currentUser and currentUser == reply.regId}">

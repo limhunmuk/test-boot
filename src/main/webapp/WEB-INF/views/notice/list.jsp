@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="tb" uri="http://egov.go.kr/pungdong/functions" %>
 <%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <t:layout title="공지사항 목록" active="notice">
@@ -156,7 +155,7 @@
 							</td>
 							<td class="writer"><c:out value="${notice.regId}"/></td>
 							<td class="view"><c:out value="${notice.viewCnt}"/></td>
-							<td class="date">${tb:formatDateTime(notice.regDt, 'yyyy-MM-dd HH:mm')}</td>
+							<td class="date"><time data-server-datetime="<c:out value='${notice.regDt}'/>" data-date-format="yyyy-MM-dd HH:mm"><c:out value="${notice.regDt}"/></time></td>
 						</tr>
 					</c:forEach>
 				</tbody>

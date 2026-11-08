@@ -19,6 +19,8 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
 	public LoginSuccessHandler(MemberService memberService) {
 		this.memberService = memberService;
 		setDefaultTargetUrl("/");
+		// Always start at home, discarding any previously cached request (including JSP forwards).
+		setAlwaysUseDefaultTargetUrl(true);
 	}
 
 	@Override
